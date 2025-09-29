@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Chat from "@/pages/chat";
 import Admin from "@/pages/admin";
 import NotFound from "@/pages/not-found";
+import { ReplitCredits } from "./components/replit-credits";
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router />
+        <ReplitCredits />
       </TooltipProvider>
     </QueryClientProvider>
   );
