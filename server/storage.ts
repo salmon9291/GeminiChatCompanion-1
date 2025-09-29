@@ -3,6 +3,11 @@ import { randomUUID } from "crypto";
 import fs from "fs";
 import path from "path";
 
+interface ApiKeys {
+  geminiApiKey: string;
+  openaiApiKey: string;
+}
+
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
@@ -10,20 +15,26 @@ export interface IStorage {
   getMessages(username: string): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
   clearMessages(username: string): Promise<void>;
+  getApiKeys(): Promise<ApiKeys>;
+  setApiKeys(keys: ApiKeys): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private messages: Map<number, Message>;
+  private apiKeys: ApiKeys;
   private messageCounter: number = 1;
   private usersFilePath: string;
   private messagesFilePath: string;
+  private apiKeysFilePath: string;
 
   constructor() {
     this.users = new Map();
     this.messages = new Map();
+    this.apiKeys = { geminiApiKey: "", openaiApiKey: "" };
     this.usersFilePath = path.join(process.cwd(), "data", "users.json");
     this.messagesFilePath = path.join(process.cwd(), "data", "messages.json");
+    this.apiKeysFilePath = path.join(process.cwd(), "data", "apikeys.json");
     
     // Ensure data directory exists
     const dataDir = path.dirname(this.usersFilePath);
@@ -46,6 +57,11 @@ export class MemStorage implements IStorage {
         this.messages = new Map(messagesData);
         this.messageCounter = Math.max(...Array.from(this.messages.keys()), 0) + 1;
       }
+
+      if (fs.existsSync(this.apiKeysFilePath)) {
+        const apiKeysData = JSON.parse(fs.readFileSync(this.apiKeysFilePath, "utf-8"));
+        this.apiKeys = { ...this.apiKeys, ...apiKeysData };
+      }
     } catch (error) {
       console.error("Error loading data:", error);
     }
@@ -64,6 +80,14 @@ export class MemStorage implements IStorage {
       fs.writeFileSync(this.messagesFilePath, JSON.stringify(Array.from(this.messages.entries())));
     } catch (error) {
       console.error("Error saving messages:", error);
+    }
+  }
+
+  private saveApiKeys() {
+    try {
+      fs.writeFileSync(this.apiKeysFilePath, JSON.stringify(this.apiKeys));
+    } catch (error) {
+      console.error("Error saving API keys:", error);
     }
   }
 
@@ -110,6 +134,15 @@ export class MemStorage implements IStorage {
     
     messagesToDelete.forEach(id => this.messages.delete(id));
     this.saveMessages();
+  }
+
+  async getApiKeys(): Promise<ApiKeys> {
+    return { ...this.apiKeys };
+  }
+
+  async setApiKeys(keys: ApiKeys): Promise<void> {
+    this.apiKeys = { ...keys };
+    this.saveApiKeys();
   }
 }
 
