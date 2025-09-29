@@ -52,14 +52,7 @@ app.use((req, res, next) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    // En desarrollo, servir archivos estáticos del cliente
-    const clientPath = path.resolve(process.cwd(), "client");
-    app.use(express.static(clientPath));
-
-    // Catch-all handler: envía index.html para rutas del frontend
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(clientPath, "index.html"));
-    });
+    await setupVite(app, server);
   } else {
     serveStatic(app);
   }
