@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat AI Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <h1>AI Assistant</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Chat Container -->
+        <main class="chat-main">
+            <!-- Assistant Avatar -->
+            <div class="assistant-container">
+                <div class="assistant-face" id="assistantFace">
+                    <div class="face">
+                        <div class="eyes">
+                            <div class="eye left-eye"></div>
+                            <div class="eye right-eye"></div>
+                        </div>
+                        <div class="mouth" id="mouth"></div>
+                    </div>
+                    <div class="voice-indicator" id="voiceIndicator"></div>
+                </div>
+                <p class="assistant-status">Listo para ayudarte</p>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-message">
+                    <div class="message-bubble assistant-message">
+                        <div class="message-content">
+                            <p>¡Hola! Soy tu asistente de IA. ¿En qué puedo ayudarte hoy?</p>
+                        </div>
+                        <div class="message-time">Ahora</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <button class="voice-button" id="voiceButton" onclick="toggleVoiceRecording()">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Escribe tu mensaje aquí..."
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="send-button" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span>El asistente está escribiendo...</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Configuración</h2>
+                    <button class="close-button" onclick="closeSettings()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <label for="username">Nombre de usuario:</label>
+                        <input type="text" id="username" placeholder="Tu nombre">
+                    </div>
+                    <div class="setting-group">
+                        <label for="voiceEnabled">Activar voz:</label>
+                        <input type="checkbox" id="voiceEnabled" checked>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" onclick="saveSettings()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
