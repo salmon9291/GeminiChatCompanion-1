@@ -26,11 +26,7 @@ function Admin() {
 
   const updateKeysMutation = useMutation({
     mutationFn: (keys: ApiKeys) =>
-      apiRequest('/api/admin/keys', {
-        method: 'POST',
-        body: JSON.stringify(keys),
-        headers: { 'Content-Type': 'application/json' }
-      }),
+      apiRequest('POST', '/api/admin/keys', keys),
     onSuccess: () => {
       toast({
         title: "API Keys actualizadas",
@@ -72,9 +68,7 @@ function Admin() {
 
   const testConnection = async (service: 'gemini' | 'openai') => {
     try {
-      const response = await apiRequest(`/api/admin/test/${service}`, {
-        method: 'POST',
-      });
+      const response = await apiRequest('POST', `/api/admin/test/${service}`);
       const result = await response.text();
       toast({
         title: "Prueba exitosa",
