@@ -116,16 +116,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const genAI = new GoogleGenAI({ apiKey: apiKeys.geminiApiKey });
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       
       // Simple test prompt
-      const result = await model.generateContent("Test connection");
-      const response = await result.response.text();
+      const result = await genAI.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: "Test connection",
+      });
       
       res.json({ success: true, message: "Gemini connection successful" });
     } catch (error) {
       console.error("Gemini connection test failed:", error);
-      res.status(500).json({ error: "Gemini connection failed", details: error.message });
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      res.status(500).json({ error: "Gemini connection failed", details: errorMessage });
     }
   });
 
@@ -149,7 +151,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "OpenAI connection successful" });
     } catch (error) {
       console.error("OpenAI connection test failed:", error);
-      res.status(500).json({ error: "OpenAI connection failed", details: error.message });
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      res.status(500).json({ error: "OpenAI connection failed", details: errorMessage });
     }
   });
 
